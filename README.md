@@ -8,7 +8,16 @@
 - I am taking STATS 220 because it's a recommended course  
 - I am interested in learning about R
 
-#### *Here is a link to my Spotify Account!*
-[Link](https://open.spotify.com/user/tt6312?si=e4bd163d42b247ae)
+  
+#### My Favourite Music Artists/Bands at the Moment Are
 
-A meme that captures how I currently feel about my university studies is ![](https://gifdb.com/images/high/guys-am-out-kermit-falling-off-building-ijaz2f2i7100uoqd.gif)
+1. Deftones
+2. Zeruel
+3. Whirr
+4. Glare
+
+##### *Here is a link to my Spotify Account!*
+[Jacob's Spotify Account](https://open.spotify.com/user/tt6312?si=e4bd163d42b247ae)
+
+
+######A meme that captures how I currently feel about my university studies is ![](https://gifdb.com/images/high/guys-am-out-kermit-falling-off-building-ijaz2f2i7100uoqd.gif)
