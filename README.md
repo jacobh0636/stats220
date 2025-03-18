@@ -16,7 +16,7 @@
 3. Whirr
 4. Glare
 
-##### *Here is a link to my Spotify Account!*
+#####*Here is a link to my Spotify Account!*
 [Jacob's Spotify Account](https://open.spotify.com/user/tt6312?si=e4bd163d42b247ae)
 
 
