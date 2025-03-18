@@ -11,4 +11,4 @@
 #### *Here is a link to my Spotify Account!*
 [Link](https://open.spotify.com/user/tt6312?si=e4bd163d42b247ae)
 
-A meme that captures how I currently feel about my university studies is ![]([https://gifdb.com/images/high/guys-am-out-kermit-falling-off-building-ijaz2f2i7100uoqd.gif])
+A meme that captures how I currently feel about my university studies is ![](https://gifdb.com/images/high/guys-am-out-kermit-falling-off-building-ijaz2f2i7100uoqd.gif])
