@@ -1,0 +1,141 @@
+---
+title: Dynamic Report - Spotify 'Daylist' Algorithm Changes
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+
+body {
+    font-family: Helvetica, sans-serif; 
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+pre, code {
+  background-color: #e0e0e0;
+  color: #333;
+  padding: 2px;
+  border-radius: 1px;
+}
+
+blockquote {
+  background-color: #e0e0e0;
+  padding: 15px;
+  border-left: 5px solid #ccc;
+  font-style: italic;
+  color: #555;
+```
+
+## Dynamic Report - Spotify 'Daylist' Algorithm Changes
+### So what are we tracking?
+#### I wanted to see how Spotify's 'Daylist' changes week to week, and what trends influence its change.
+
+I have created a form, to attempt to collect data, that shows a trend/pattern with the algorithm. Below are a number of plots and charts which help visualize this information. 
+
+#### A chart displaying the number of responses, by the day it was submitted/listened to
+
+```{r,fig.width=5, fig.height=3}
+library(tidyverse)
+
+url <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwQH2FCfBkk1zZHVZXhCKkaTWcxW7U7FJ-puo3gl6-qLJqDBPoqHWZvMtF6AP214HOlRW0-5HbhYco/pub?output=csv"
+logged_data <- read.csv(url)
+
+latest_data <- logged_data %>%
+  rename(
+    day_of_week = `What.Day.of.the.Week.are.you.currently.listening.on.`,
+    time_of_day = `What.Time.of.Day.are.you.Listening.at.`,
+    liked_songs = `How.many.songs.are.included.in.the..Daylist..which.are.already.in.your.other.curated.playlists.`,
+    mood_match = `Do.the.songs.in.the..Daylist..match.your.current.feelings.mood.`
+  )
+# bar chart, day_of_week (showing how many entries per calendar day)
+
+ggplot(latest_data, aes(x = day_of_week)) +
+  geom_bar(fill = "forestgreen", color = "black") +
+  labs(title = "Number of Responses by Day of the Week", x = "Day of the Week", y = "Number of times recorded") 
+
+
+
+```
+
+### Within the 'Daylist', Spotify displays whether or not a song on the 'Daylist' is already in a previously user curated playlist. 
+#### This chart shows how many songs per 50 in the 'Daylist', are alreading in user curated playlists
+
+```{r,fig.width=5, fig.height=3}
+ggplot(latest_data, aes(x = liked_songs)) +
+  geom_bar(fill = "forestgreen", color = "black") +
+  labs(title = "Number of previously added Songs", x = "Song Match", y = "Number of times recorded") 
+
+```
+
+### Summary Statistics, based on the Number of previously added songs to user curated playlists
+The Average number of previously added songs per submission, is represented as ``avg_liked_songs``,
+The minimum number of previously added songs per submission, is represented as ``min_liked_songs``,
+The maximum number of previously added songs per submission, is represented as ``max_liked_songs``,
+
+#### They can be visually represented as
+
+```{r,fig.width=5, fig.height=3}
+summary_values_liked_songs <- latest_data %>%
+  summarize(
+    total_Responses = n(),  # number of responses
+    avg_liked_songs = mean(as.numeric(liked_songs), na.rm = TRUE), # average number of liked_songs (matches with other user curated playlists)
+    min_liked_songs = min(as.numeric(liked_songs), na.rm = TRUE),  # minimum number of liked_songs (matches with other user curated playlists)
+    max_liked_songs = max(as.numeric(liked_songs), na.rm = TRUE)   # maximum number of liked_songs (matches with other user curated playlists)
+  )
+
+# dynam,average number of liked_songs (matches with other user curated playlists)
+comment_avg <- paste( 'The average number of liked songs is' , round(summary_values_liked_songs$avg_liked_songs, 2))
+
+# dynam, minimum number of liked_songs (matches with other user curated playlists)
+comment_min_liked_songs <- paste( 'The minimum number of liked songs is' , summary_values_liked_songs$min_liked_songs)
+
+# dynam, maximum number of liked_songs (matches with other user curated playlists)
+comment_max_liked_songs <- paste( 'The maximum number of liked songs is' , summary_values_liked_songs$max_liked_songs)
+
+# print comments 
+list(comment_avg, comment_min_liked_songs, comment_max_liked_songs)
+
+
+```
+
+### I also wanted to see if there was any relationship between the Day of the Week and how many matches with the number of previously added songs per submission
+#### Here are plots representing that 
+
+```{r,fig.width=5, fig.height=3}
+ggplot(latest_data, aes(x = as.factor(day_of_week), y = as.numeric(liked_songs))) +
+  geom_boxplot(fill = "forestgreen", color = "black") +
+  labs(title = "Matching Songs by Day of the Week",
+       x = "Day of the Week",
+       y = "Number of Matching Songs")
+
+ggplot(latest_data, aes(x = as.factor(day_of_week), y = as.numeric(liked_songs))) +
+  stat_summary(fun = "mean", geom = "point", color = "forestgreen", size = 3) +
+  geom_smooth(method = "lm", aes(group = 1), color = "black", linetype = "solid") +
+  labs(title = "Average Matching Songs by Day of the Week",
+       x = "Day of the Week",
+       y = "Number of Matching Songs")
+
+```
+
+### By combining the data we can see 
+##### The points show the average number of liked songs per day of the week.                    The bars show the number of responses per day of the week.
+
+```{r,fig.width=6, fig.height=4}
+ggplot(latest_data, aes(x = as.factor(day_of_week))) +
+  geom_bar(aes(y = ..count..), fill = "forestgreen", color = "black") +
+  stat_summary(aes(y = as.numeric(liked_songs)), fun = "mean", geom = "point", color = "black", size = 3) +
+  geom_smooth(aes(y = as.numeric(liked_songs)), method = "lm", color = "black", linetype = "solid") +
+  labs(title = "Number of Responses and Average Number of Matches",
+       x = "Day of the Week",
+       y = "Number of Responses") +
+
+  scale_y_continuous(
+    name = "Number of Responses",
+    sec.axis = sec_axis(~., name = "Average Number of Liked Songs")
+  )
+```
